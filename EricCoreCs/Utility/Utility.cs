@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.IO;
-using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Serialization;
+
 
 using ULONG = System.UInt32;
-using BYTE = System.Byte;
-
 using u8 = System.Byte;
 
 
@@ -15,14 +11,14 @@ namespace EricCore
 {
     public class Utility
     {
-        public const BYTE BIT0 = 0x01;
-        public const BYTE BIT1 = 0x02;
-        public const BYTE BIT2 = 0x04;
-        public const BYTE BIT3 = 0x08;
-        public const BYTE BIT4 = 0x10;
-        public const BYTE BIT5 = 0x20;
-        public const BYTE BIT6 = 0x40;
-        public const BYTE BIT7 = 0x80;
+        public const u8 BIT0 = 0x01;
+        public const u8 BIT1 = 0x02;
+        public const u8 BIT2 = 0x04;
+        public const u8 BIT3 = 0x08;
+        public const u8 BIT4 = 0x10;
+        public const u8 BIT5 = 0x20;
+        public const u8 BIT6 = 0x40;
+        public const u8 BIT7 = 0x80;
 
         public string makeHeader(string meg) {
             StringReader sr = new StringReader(meg);
@@ -120,7 +116,7 @@ namespace EricCore
             }
         }
 
-        public void to_file(string fineName, BYTE[] buf) {
+        public void to_file(string fineName, u8[] buf) {
             must_have_file(fineName);
             //開啟建立檔案
             using (FileStream file = File.Open(fineName, FileMode.Open, FileAccess.ReadWrite)) {
@@ -151,10 +147,10 @@ namespace EricCore
         }
 
         public void ulongToArray(ULONG source, byte[] ary, int offset) {
-            ary[offset + 0] = (BYTE)(source >> 0x18);
-            ary[offset + 1] = (BYTE)(source >> 0x10);
-            ary[offset + 2] = (BYTE)(source >> 0x08);
-            ary[offset + 3] = (BYTE)(source >> 0x00);
+            ary[offset + 0] = (u8)(source >> 0x18);
+            ary[offset + 1] = (u8)(source >> 0x10);
+            ary[offset + 2] = (u8)(source >> 0x08);
+            ary[offset + 3] = (u8)(source >> 0x00);
         }
 
         public ULONG arrayToUlong(byte[] ary, int offset) {
@@ -166,7 +162,7 @@ namespace EricCore
             return res;
         }
 
-        public void genPattern(BYTE[] array, ULONG value, int startOffset, int count) {
+        public void genPattern(u8[] array, ULONG value, int startOffset, int count) {
             int i = startOffset;
             while (i < count) {
                 if ((count - i) >= 4) {
@@ -174,24 +170,24 @@ namespace EricCore
                     i += 4;
                 } else {
                     int tmp = i % 4;
-                    array[i] = (BYTE)(value >> (0x18 - (tmp * 8)));
+                    array[i] = (u8)(value >> (0x18 - (tmp * 8)));
                     i += 1;
                 }
             }
         }
 
-        public void genPattern(BYTE[] array, ULONG value, int offset) {
+        public void genPattern(u8[] array, ULONG value, int offset) {
             genPattern(array, value, offset, array.Length);
         }
 
-        public void genPattern_increase(BYTE[] array) {
+        public void genPattern_increase(u8[] array) {
             for (int i = 0; i < array.Length; i++) {
-                array[i] = (BYTE)(i & 0xFF);
+                array[i] = (u8)(i & 0xFF);
             }
         }
 
 
-        public bool cmpWriteReadBuf_9k(BYTE[] writeBuf, BYTE[] readBuf) {
+        public bool cmpWriteReadBuf_9k(u8[] writeBuf, u8[] readBuf) {
             for (int i = 0; i < 8192; i++) {
                 if (writeBuf[1024 + i] != readBuf[i]) {
                     return false;
@@ -200,7 +196,7 @@ namespace EricCore
             return true;
         }
 
-        public bool memcmp(BYTE[] buf1, BYTE[] buf2, ULONG offset1, ULONG offset2, ULONG length) {
+        public bool memcmp(u8[] buf1, u8[] buf2, ULONG offset1, ULONG offset2, ULONG length) {
             for (int i = 0; i < length; i++) {
                 if (buf1[offset1 + i] != buf2[offset2 + i]) {
                     return false;
@@ -209,22 +205,22 @@ namespace EricCore
             return true;
         }
 
-        public bool memcmp(BYTE[] buf1, BYTE[] buf2, ULONG length) {
+        public bool memcmp(u8[] buf1, u8[] buf2, ULONG length) {
             return memcmp(buf1, buf2, 0, 0, length);
         }
 
-        public void memcpy(BYTE[] source, BYTE[] target) {
+        public void memcpy(u8[] source, u8[] target) {
             memcpy(source, target, 0, 0, source.Length);
         }
 
 
-        public void memcpy(BYTE[] source, BYTE[] target, ULONG source_offset, ULONG target_offset, int length) {
+        public void memcpy(u8[] source, u8[] target, ULONG source_offset, ULONG target_offset, int length) {
             for (int i = 0; i < length; i++) {
                 target[target_offset + i] = source[source_offset + i];
             }
         }
 
-        public void memset(BYTE[] target, BYTE offset, BYTE value, int length) {
+        public void memset(u8[] target, u8 offset, u8 value, int length) {
             for (int i = 0; i < length; i++) {
                 target[offset + i] = value;
             }
