@@ -8,6 +8,8 @@ using System.Xml.Serialization;
 using ULONG = System.UInt32;
 using BYTE = System.Byte;
 
+using u8 = System.Byte;
+
 
 namespace EricCore
 {
@@ -231,5 +233,6 @@ namespace EricCore
         public ULONG hexStringToUlong(string str) {
             return Convert.ToUInt32(str, 16);
         }
+
     }
 }
