@@ -3,14 +3,12 @@ using System.Text;
 using System.IO;
 
 
-using ULONG = System.UInt32;
+using u32 = System.UInt32;
 using u8 = System.Byte;
 
 
-namespace EricCore
-{
-    public class Utility
-    {
+namespace EricCore.Utilitys {
+    public class Utility {
         public const u8 BIT0 = 0x01;
         public const u8 BIT1 = 0x02;
         public const u8 BIT2 = 0x04;
@@ -146,23 +144,23 @@ namespace EricCore
             return "\r\n";
         }
 
-        public void ulongToArray(ULONG source, byte[] ary, int offset) {
+        public void ulongToArray(u32 source, byte[] ary, int offset) {
             ary[offset + 0] = (u8)(source >> 0x18);
             ary[offset + 1] = (u8)(source >> 0x10);
             ary[offset + 2] = (u8)(source >> 0x08);
             ary[offset + 3] = (u8)(source >> 0x00);
         }
 
-        public ULONG arrayToUlong(byte[] ary, int offset) {
-            ULONG res = 0;
-            res += (ULONG)ary[offset + 0] << 0x18;
-            res += (ULONG)ary[offset + 1] << 0x10;
-            res += (ULONG)ary[offset + 2] << 0x08;
-            res += (ULONG)ary[offset + 3] << 0x00;
+        public u32 arrayToUlong(byte[] ary, int offset) {
+            u32 res = 0;
+            res += (u32)ary[offset + 0] << 0x18;
+            res += (u32)ary[offset + 1] << 0x10;
+            res += (u32)ary[offset + 2] << 0x08;
+            res += (u32)ary[offset + 3] << 0x00;
             return res;
         }
 
-        public void genPattern(u8[] array, ULONG value, int startOffset, int count) {
+        public void genPattern(u8[] array, u32 value, int startOffset, int count) {
             int i = startOffset;
             while (i < count) {
                 if ((count - i) >= 4) {
@@ -176,7 +174,7 @@ namespace EricCore
             }
         }
 
-        public void genPattern(u8[] array, ULONG value, int offset) {
+        public void genPattern(u8[] array, u32 value, int offset) {
             genPattern(array, value, offset, array.Length);
         }
 
@@ -196,7 +194,7 @@ namespace EricCore
             return true;
         }
 
-        public bool memcmp(u8[] buf1, u8[] buf2, ULONG offset1, ULONG offset2, ULONG length) {
+        public bool memcmp(u8[] buf1, u8[] buf2, u32 offset1, u32 offset2, u32 length) {
             for (int i = 0; i < length; i++) {
                 if (buf1[offset1 + i] != buf2[offset2 + i]) {
                     return false;
@@ -205,7 +203,7 @@ namespace EricCore
             return true;
         }
 
-        public bool memcmp(u8[] buf1, u8[] buf2, ULONG length) {
+        public bool memcmp(u8[] buf1, u8[] buf2, u32 length) {
             return memcmp(buf1, buf2, 0, 0, length);
         }
 
@@ -214,7 +212,7 @@ namespace EricCore
         }
 
 
-        public void memcpy(u8[] source, u8[] target, ULONG source_offset, ULONG target_offset, int length) {
+        public void memcpy(u8[] source, u8[] target, u32 source_offset, u32 target_offset, int length) {
             for (int i = 0; i < length; i++) {
                 target[target_offset + i] = source[source_offset + i];
             }
@@ -226,9 +224,19 @@ namespace EricCore
             }
         }
 
-        public ULONG hexStringToUlong(string str) {
+        public u32 hexStringToU32(string str) {
             return Convert.ToUInt32(str, 16);
         }
+        public u8 toByte(string hexString) {
+            return Convert.ToByte(hexString, 16);
+        }
 
+        public string toHexString(u8 val) {
+            return val.ToString("X2");
+        }
+
+        public string toHexString(u32 val) {
+            return val.ToString("X2");
+        }
     }
 }
