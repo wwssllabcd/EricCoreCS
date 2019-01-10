@@ -1,8 +1,10 @@
-﻿using EricCore.Scsi;
-using System;
+﻿
+
 using System.Collections.Generic;
 using System.Windows.Controls;
+
 using EricCore.Utilitys;
+using EricCore.Scsi;
 
 namespace EricCore.UsbCmder {
     public class UsbCmderView {
@@ -45,7 +47,7 @@ namespace EricCore.UsbCmder {
                 m_DataOut.IsChecked = true;
             }
 
-            m_txtLength.Text = m_u.toHexString(cmd.len);
+            m_txtLength.Text = m_u.toHexString(cmd.length);
 
         }
         public void cmd_select_changed() {
@@ -57,7 +59,7 @@ namespace EricCore.UsbCmder {
                 cmd.cdb[i] = m_u.toByte(m_txtCdb[i].Text);
             }
 
-            cmd.len = m_u.toByte(m_txtLength.Text);
+            cmd.length = m_u.hexStringToU32(m_txtLength.Text);
 
             if (m_DataIn.IsChecked == true) {
                 cmd.direction = CdbCmd.DATA_IN;
@@ -66,6 +68,12 @@ namespace EricCore.UsbCmder {
             }
             return cmd;
         }
-    }
 
+        public void send_msg(string msg, bool isAppend = false) {
+            if (isAppend == false) {
+                m_mainMsg.Document.Blocks.Clear();
+            }
+            m_mainMsg.AppendText(msg);
+        }
+    }
 }

@@ -238,19 +238,5 @@ namespace EricCore.Utilitys {
         public string toHexString(u32 val) {
             return val.ToString("X2");
         }
-	public void Serialize<T>(T item, string fileName) {
-            System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(item.GetType());
-            Stream s = File.Open(fileName, FileMode.Create);
-            ser.Serialize(s, item);
-            s.Close();
-        }
-
-        public T deserialize<T>(string fileName) {
-            XmlSerializer ser = new XmlSerializer(typeof(T));
-            StreamReader reader = new StreamReader(fileName);
-            object obj = ser.Deserialize(reader);
-            reader.Close();
-            return (T)obj;
-        }
     }
 }
