@@ -4,8 +4,9 @@ using System.IO;
 
 
 using u32 = System.UInt32;
+using u16 = System.UInt16;
 using u8 = System.Byte;
-
+using System.Xml.Serialization;
 
 namespace EricCore.Utilitys {
     public class Utility {
@@ -141,30 +142,47 @@ namespace EricCore.Utilitys {
 
 
         public string crlf() {
-            return "\r\n";
+            return Environment.NewLine;
         }
 
-        public void ulongToArray(u32 source, byte[] ary, int offset) {
+        public void set_value_to_array_be(u32 source, byte[] ary, int offset) {
             ary[offset + 0] = (u8)(source >> 0x18);
             ary[offset + 1] = (u8)(source >> 0x10);
             ary[offset + 2] = (u8)(source >> 0x08);
             ary[offset + 3] = (u8)(source >> 0x00);
         }
 
-        public u32 arrayToUlong(byte[] ary, int offset) {
-            u32 res = 0;
-            res += (u32)ary[offset + 0] << 0x18;
-            res += (u32)ary[offset + 1] << 0x10;
-            res += (u32)ary[offset + 2] << 0x08;
-            res += (u32)ary[offset + 3] << 0x00;
+        
+        u16 to_u16_le(byte[] ary, int offset) {
+            u16 res = 0;
+            res += (u16)(ary[offset + 1] << 0x08);
+            res += (u16)(ary[offset + 0] << 0x00);
             return res;
         }
+
+        u32 to_u32_le(byte[] ary, int offset) {
+            u32 res = 0;
+            res += (u32)ary[offset + 3] << 0x18;
+            res += (u32)ary[offset + 2] << 0x10;
+            res += (u32)ary[offset + 1] << 0x08;
+            res += (u32)ary[offset + 0] << 0x00;
+            return res;
+        }
+
+        public u16 to_u16(byte[] ary, int offset) {
+            return to_u16_le(ary, offset);
+        }
+
+        public u32 to_u32(byte[] ary, int offset) {
+            return to_u32_le(ary, offset);
+        }
+
 
         public void genPattern(u8[] array, u32 value, int startOffset, int count) {
             int i = startOffset;
             while (i < count) {
                 if ((count - i) >= 4) {
-                    ulongToArray(value, array, i);
+                    set_value_to_array_be(value, array, i);
                     i += 4;
                 } else {
                     int tmp = i % 4;
@@ -184,16 +202,6 @@ namespace EricCore.Utilitys {
             }
         }
 
-
-        public bool cmpWriteReadBuf_9k(u8[] writeBuf, u8[] readBuf) {
-            for (int i = 0; i < 8192; i++) {
-                if (writeBuf[1024 + i] != readBuf[i]) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         public bool memcmp(u8[] buf1, u8[] buf2, u32 offset1, u32 offset2, u32 length) {
             for (int i = 0; i < length; i++) {
                 if (buf1[offset1 + i] != buf2[offset2 + i]) {
@@ -203,14 +211,18 @@ namespace EricCore.Utilitys {
             return true;
         }
 
-        public bool memcmp(u8[] buf1, u8[] buf2, u32 length) {
-            return memcmp(buf1, buf2, 0, 0, length);
+        public bool memcmp(u8[] buf1, u8[] buf2) {
+            int len1 = buf1.Length;
+            int len2 = buf2.Length;
+            if (len1 != len2) {
+                throw new System.ArgumentException("buf len is not equal");
+            }
+            return memcmp(buf1, buf2, 0, 0, (u32)len2);
         }
 
         public void memcpy(u8[] source, u8[] target) {
             memcpy(source, target, 0, 0, source.Length);
         }
-
 
         public void memcpy(u8[] source, u8[] target, u32 source_offset, u32 target_offset, int length) {
             for (int i = 0; i < length; i++) {
@@ -224,10 +236,10 @@ namespace EricCore.Utilitys {
             }
         }
 
-        public u32 hexStringToU32(string str) {
-            return Convert.ToUInt32(str, 16);
+        public u32 to_u32(string hexString) {
+            return Convert.ToUInt32(hexString, 16);
         }
-        public u8 toByte(string hexString) {
+        public u8 to_byte(string hexString) {
             return Convert.ToByte(hexString, 16);
         }
 
@@ -235,8 +247,55 @@ namespace EricCore.Utilitys {
             return val.ToString("X2");
         }
 
-        public string toHexString(u32 val) {
-            return val.ToString("X2");
+        public string toHexString(u16 val) {
+            return val.ToString("X4");
         }
+
+        public string toHexString(u32 val) {
+            return val.ToString("X8");
+        }
+
+        public void serialize<T>(T item, string fileName) {
+            System.Xml.Serialization.XmlSerializer ser = new System.Xml.Serialization.XmlSerializer(item.GetType());
+            Stream s = File.Open(fileName, FileMode.Create);
+            ser.Serialize(s, item);
+            s.Close();
+        }
+
+        public T deserialize<T>(string fileName) {
+            XmlSerializer ser = new XmlSerializer(typeof(T));
+            StreamReader reader = new StreamReader(fileName);
+            object obj = ser.Deserialize(reader);
+            reader.Close();
+            return (T)obj;
+
+        }
+
+        public bool is_file_exist(string filePath) {
+            return System.IO.File.Exists(filePath);
+        }
+
+        public string show_buf_diff(byte[] buf1, byte[] buf2) {
+            int len = buf1.Length;
+            string res = "";
+            for (int i = 0; i < len; i++) {
+                byte a = buf1[i];
+                byte b = buf2[i];
+                if (a != b) {
+                    res += $"diff[{i}], {a}, {b}";
+                }
+            }
+            return res;
+        }
+
+        public T[] init_obj_array<T>(int length) where T : new() {
+            T[] array = new T[length];
+            for (int i = 0; i < length; ++i) {
+                array[i] = new T();
+            }
+            return array;
+        }
+
+
     }
 }

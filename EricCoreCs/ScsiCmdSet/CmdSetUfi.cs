@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 
-
 using u32 = System.UInt32;
 using u8 = System.Byte;
 
 namespace EricCore.Scsi {
+    using System.Xml.Serialization;
+    [System.Serializable]
     public class CdbCmd {
+        [XmlElement("values", DataType = "hexBinary")]
         public u8[] cdb = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public u32 length;
         public string desc;

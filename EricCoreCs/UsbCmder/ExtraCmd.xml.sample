@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<ArrayOfCdbCmd xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CdbCmd>
+    <values>12000000240000000000000000000000</values>
+    <length>36</length>
+    <desc>UFI: Inquiry</desc>
+    <direction>1</direction>
+  </CdbCmd>
+  <CdbCmd>
+    <values>03000000120000000000000000000000</values>
+    <length>18</length>
+    <desc>UFI: Request Sense</desc>
+    <direction>1</direction>
+  </CdbCmd>
+  <CdbCmd>
+    <values>25000000000000000000000000000000</values>
+    <length>8</length>
+    <desc>UFI: Read Capacity</desc>
+    <direction>1</direction>
+  </CdbCmd>
+  <CdbCmd>
+    <values>23000000000000000000000000000000</values>
+    <length>12</length>
+    <desc>UFI: Read Format Capacity</desc>
+    <direction>1</direction>
+  </CdbCmd>
+  <CdbCmd>
+    <values>00000000000000000000000000000000</values>
+    <length>0</length>
+    <desc>UFI: Test Unit Ready</desc>
+    <direction>0</direction>
+  </CdbCmd>
+  <CdbCmd>
+    <values>28000000000000000100000000000000</values>
+    <length>512</length>
+    <desc>UFI: Read(10)</desc>
+    <direction>1</direction>
+  </CdbCmd>
+  <CdbCmd>
+    <values>2A000000000000000100000000000000</values>
+    <length>512</length>
+    <desc>UFI: Write(10)</desc>
+    <direction>0</direction>
+  </CdbCmd>
+</ArrayOfCdbCmd>
