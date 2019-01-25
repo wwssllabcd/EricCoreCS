@@ -1,8 +1,4 @@
-﻿using ULONG = System.UInt32;
-using BYTE = System.Byte;
-using u8 = System.Byte;
-
-using System.Windows.Forms;
+﻿using System.Windows.Controls;
 
 namespace EricCore
 {
