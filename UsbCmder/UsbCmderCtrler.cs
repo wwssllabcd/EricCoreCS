@@ -40,6 +40,10 @@ namespace EricCore.UsbCmder {
             return m_u.makeAsciiTable(buffer, cmd.length);
         }
 
+        public void refresh() {
+
+        }
+
         public void execute() {
             CdbCmd cmd = m_view.get_cmd_from_ui(new CdbCmd());
             DevCtrl device = DeviceFactory.get_device();
