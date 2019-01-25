@@ -8,7 +8,7 @@ namespace EricCore.Scsi {
     [System.Serializable]
     public class CdbCmd {
         [XmlElement("values", DataType = "hexBinary")]
-        public u8[] cdb = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        public u8[] cdb = new u8[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         public u32 length;
         public string desc;
         public u8 direction;

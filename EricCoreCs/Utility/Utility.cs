@@ -1,24 +1,14 @@
 ﻿using System;
 using System.Text;
 using System.IO;
-
-
+using System.Xml.Serialization;
 using u32 = System.UInt32;
 using u16 = System.UInt16;
 using u8 = System.Byte;
-using System.Xml.Serialization;
+
 
 namespace EricCore.Utilitys {
     public class Utility {
-        public const u8 BIT0 = 0x01;
-        public const u8 BIT1 = 0x02;
-        public const u8 BIT2 = 0x04;
-        public const u8 BIT3 = 0x08;
-        public const u8 BIT4 = 0x10;
-        public const u8 BIT5 = 0x20;
-        public const u8 BIT6 = 0x40;
-        public const u8 BIT7 = 0x80;
-
         public string makeHeader(string meg) {
             StringReader sr = new StringReader(meg);
             StringBuilder strB = new StringBuilder();
@@ -44,20 +34,20 @@ namespace EricCore.Utilitys {
             return strB.ToString();
         }
 
-        public string makeHexTable_NoHeader(byte[] array) {
+        public string makeHexTable_NoHeader(u8[] array) {
             return makeHexTable_NoHeader(array, (uint)array.Length);
         }
 
-        public string makeHexTable(byte[] array) {
+        public string makeHexTable(u8[] array) {
             return makeHexTable(array, (uint)array.Length);
         }
 
-        public string makeHexTable(byte[] array, uint length) {
+        public string makeHexTable(u8[] array, uint length) {
             //return makeHexTable_NoHeader(array, length);
             return makeHeader(makeHexTable_NoHeader(array, length));
         }
 
-        public string makeHexTable_NoHeader(byte[] array, uint length) {
+        public string makeHexTable_NoHeader(u8[] array, uint length) {
             StringBuilder strB = new StringBuilder();
             for (uint i = 0; i < length; i++) {
                 strB.Append(array[i].ToString("X2"));
@@ -72,11 +62,7 @@ namespace EricCore.Utilitys {
             return strB.ToString();
         }
 
-        public string makeAsciiTable(byte[] array) {
-            return makeAsciiTable(array, (uint)array.Length);
-        }
-
-        public string makeAsciiTable(byte[] array, uint length) {
+        public string makeAsciiTable(u8[] array, uint length) {
             StringBuilder strB = new StringBuilder();
             for (uint i = 0; i < length; i++) {
                 //skip "0"
@@ -95,12 +81,16 @@ namespace EricCore.Utilitys {
             return strB.ToString();
         }
 
-        public byte[] getFileData(string path) {
+        public string makeAsciiTable(u8[] array) {
+            return makeAsciiTable(array, (uint)array.Length);
+        }
+
+        public u8[] getFileData(string path) {
             FileStream fp = new FileStream(path, FileMode.Open);
             BinaryReader br = new BinaryReader(fp);
             int size = (int)br.BaseStream.Length;
 
-            byte[] ioBuf = new byte[size];
+            u8[] ioBuf = new byte[size];
             ioBuf = br.ReadBytes(size);
 
             fp.Dispose();
@@ -145,22 +135,22 @@ namespace EricCore.Utilitys {
             return Environment.NewLine;
         }
 
-        public void set_value_to_array_be(u32 source, byte[] ary, int offset) {
+        public void set_value_to_array_be(u32 source, u8[] ary, int offset) {
             ary[offset + 0] = (u8)(source >> 0x18);
             ary[offset + 1] = (u8)(source >> 0x10);
             ary[offset + 2] = (u8)(source >> 0x08);
             ary[offset + 3] = (u8)(source >> 0x00);
         }
 
-        
-        u16 to_u16_le(byte[] ary, int offset) {
+
+        u16 to_u16_le(u8[] ary, int offset) {
             u16 res = 0;
             res += (u16)(ary[offset + 1] << 0x08);
             res += (u16)(ary[offset + 0] << 0x00);
             return res;
         }
 
-        u32 to_u32_le(byte[] ary, int offset) {
+        u32 to_u32_le(u8[] ary, int offset) {
             u32 res = 0;
             res += (u32)ary[offset + 3] << 0x18;
             res += (u32)ary[offset + 2] << 0x10;
@@ -169,11 +159,11 @@ namespace EricCore.Utilitys {
             return res;
         }
 
-        public u16 to_u16(byte[] ary, int offset) {
+        public u16 to_u16(u8[] ary, int offset) {
             return to_u16_le(ary, offset);
         }
 
-        public u32 to_u32(byte[] ary, int offset) {
+        public u32 to_u32(u8[] ary, int offset) {
             return to_u32_le(ary, offset);
         }
 
@@ -275,7 +265,7 @@ namespace EricCore.Utilitys {
             return System.IO.File.Exists(filePath);
         }
 
-        public string show_buf_diff(byte[] buf1, byte[] buf2) {
+        public string show_buf_diff(u8[] buf1, u8[] buf2) {
             int len = buf1.Length;
             string res = "";
             for (int i = 0; i < len; i++) {

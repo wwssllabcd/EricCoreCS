@@ -15,7 +15,7 @@ namespace EricCore.EricCoreCs.UsbCmder {
     }
     public class SeqWrite {
         public delegate bool UiStop();
-        public delegate void LbaReadWrite(u32 lba, u32 secLen, byte[] buffer);
+        public delegate void LbaReadWrite(u32 lba, u32 secLen, u8[] buffer);
         public delegate void Reboot();
         public delegate void ShowMsg(string msg, bool isAppend);
 
@@ -26,8 +26,8 @@ namespace EricCore.EricCoreCs.UsbCmder {
             bool isNoWrite = param.isNoWrite;
             bool isNoRead = param.isNoRead;
 
-            byte[] writeBuffer = new byte[128 * 1024];
-            byte[] readBuffer = new byte[128 * 1024];
+            u8[] writeBuffer = new byte[128 * 1024];
+            u8[] readBuffer = new byte[128 * 1024];
             Utility util = new Utility();
 
             for (u32 startLba = param.startLba; startLba < endLba; startLba += stepLba) {

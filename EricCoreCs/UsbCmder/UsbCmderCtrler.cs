@@ -3,9 +3,9 @@ using EricCore.Device;
 using EricCore.Utilitys;
 using System.Collections.Generic;
 
+using System.Windows.Input;// for key up/down
 using u32 = System.UInt32;
 using u8 = System.Byte;
-using System.Windows.Input;
 
 namespace EricCore.UsbCmder {
     public class UsbCmderCtrller {
@@ -14,7 +14,7 @@ namespace EricCore.UsbCmder {
         WpfUtility m_du = new WpfUtility();
         public delegate void ExtraPageCtrol(CdbCmd cmd, bool isPageDown);
         public ExtraPageCtrol epcFun = null;
-        public byte[] m_buffer;
+        public u8[] m_buffer;
 
         public List<CdbCmd> get_extra_cmd_set(List<CdbCmd> cmdColls) {
             string extraCmdFilePath = "ExtraCmd.xml";
@@ -36,17 +36,22 @@ namespace EricCore.UsbCmder {
             m_view.cmd_select_changed();
         }
 
+        string gen_2nd_msg(CdbCmd cmd, u8[] buffer) {
+            return m_u.makeAsciiTable(buffer, cmd.length);
+        }
+
         public void execute() {
             CdbCmd cmd = m_view.get_cmd_from_ui(new CdbCmd());
-            DevCtrl device = new ClDevice();
+            DevCtrl device = DeviceFactory.get_device();
 
-            byte[] buf = new byte[128 * 1024];
+            u8[] buf = new byte[128 * 1024];
             device.send_cmd(cmd, ref buf);
             m_view.send_msg(m_u.makeHexTable(buf, cmd.length));
+            m_view.send_2nd_msg(gen_2nd_msg(cmd, buf));
         }
 
         public bool load_file() {
-            string filePath = m_du.get_file_path("", "Bin|*.bin");
+            string filePath = m_du.get_file_path("Bin|*.bin");
             if (filePath.Length == 0) {
                 m_view.send_msg("No file have been selected");
                 return false;
@@ -56,7 +61,7 @@ namespace EricCore.UsbCmder {
         }
 
         public bool save_msg_2nd() {
-            string filePath = m_du.get_file_path("Msg2nd.txt", "txt|*.txt");
+            string filePath = m_du.get_file_path("txt|*.txt", "txt", "Msg2nd.txt");
             if (filePath.Length == 0) {
                 m_view.send_msg("No file have been selected");
                 return false;
