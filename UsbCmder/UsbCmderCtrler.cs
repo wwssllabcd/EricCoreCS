@@ -29,7 +29,7 @@ namespace EricCore.UsbCmder {
             m_view = cmderView;
             CmdSetUfi cmdset = new CmdSetUfi();
             List<CdbCmd> cmdColls = cmdset.get_cmd_colls(get_extra_cmd_set(new List<CdbCmd>()));
-            m_view.init(cmdColls);
+            m_view.bind_cmd_sel(cmdColls);
         }
 
         public void cmd_select_changed() {
