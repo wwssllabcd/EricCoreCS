@@ -61,5 +61,8 @@
   <ItemGroup>
     <None Include="UsbCmder\ExtraCmd.xml.sample" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="readme.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
