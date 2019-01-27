@@ -1,20 +1,14 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows.Forms;
 
-namespace EricCore
-{
-    public class WfUtility
-    {
-        public void up_down_item(ListBox lb, int select, bool isUpItem)
-        {
+namespace EricCore.Utilitys {
+    public class WinFormUtility {
+        public void up_down_item(ListBox lb, int select, bool isUpItem) {
             int selSwitch;
             int insertPtr;
-            if (isUpItem)
-            {
+            if (isUpItem) {
                 selSwitch = select - 1;
                 insertPtr = select + 1;
-            }
-            else
-            {
+            } else {
                 selSwitch = select + 1;
                 insertPtr = select + 2;
             }
@@ -22,13 +16,10 @@ namespace EricCore
             var selString = lb.Items[select];
             var switchString = lb.Items[selSwitch];
 
-            if (isUpItem)
-            {
+            if (isUpItem) {
                 lb.Items.Insert(insertPtr, selString);
                 lb.Items.Insert(insertPtr + 1, switchString);
-            }
-            else
-            {
+            } else {
                 lb.Items.Insert(insertPtr, switchString);
                 lb.Items.Insert(insertPtr + 1, selString);
             }

@@ -1,6 +1,4 @@
-﻿
-
-using System;
+﻿using System;
 namespace EricCore.Utilitys {
     public class WpfUtility {
         public string get_file_path(string filter = "Any File|*.*", string defaultExt = "", string defFileName = "") {
