@@ -26,25 +26,12 @@ namespace EricCore.Utilitys {
                 }
 
                 strB.Append(cnt.ToString("X04") + "| ");
-                strB.Append(line);
+                strB.Append(line).Append(crlf());
                 line = sr.ReadLine();
 
                 cnt += 0x10;
             }
             return strB.ToString();
-        }
-
-        public string makeHexTable_NoHeader(u8[] array) {
-            return makeHexTable_NoHeader(array, (uint)array.Length);
-        }
-
-        public string makeHexTable(u8[] array) {
-            return makeHexTable(array, (uint)array.Length);
-        }
-
-        public string makeHexTable(u8[] array, uint length) {
-            //return makeHexTable_NoHeader(array, length);
-            return makeHeader(makeHexTable_NoHeader(array, length));
         }
 
         public string makeHexTable_NoHeader(u8[] array, uint length) {
@@ -53,16 +40,25 @@ namespace EricCore.Utilitys {
                 strB.Append(array[i].ToString("X2"));
                 strB.Append(" ");
                 if (((i + 1) % 0x10) == 0) {
-                    //prevent last crlf
-                    if ((i + 1) < length) {
-                        strB.Append(crlf());
-                    }
+                    strB.Append(crlf());
                 }
             }
             return strB.ToString();
         }
 
-        public string makeAsciiTable(u8[] array, uint length) {
+        public string makeHexTable_NoHeader(u8[] array) {
+            return makeHexTable_NoHeader(array, (uint)array.Length);
+        }
+
+        public string make_hex_table(u8[] array) {
+            return make_hex_table(array, (uint)array.Length);
+        }
+
+        public string make_hex_table(u8[] array, uint length) {
+            return makeHeader(makeHexTable_NoHeader(array, length));
+        }
+
+        public string make_ascii_table(u8[] array, uint length) {
             StringBuilder strB = new StringBuilder();
             for (uint i = 0; i < length; i++) {
                 //skip "0"
@@ -81,8 +77,8 @@ namespace EricCore.Utilitys {
             return strB.ToString();
         }
 
-        public string makeAsciiTable(u8[] array) {
-            return makeAsciiTable(array, (uint)array.Length);
+        public string make_ascii_table(u8[] array) {
+            return make_ascii_table(array, (uint)array.Length);
         }
 
         public u8[] getFileData(string path) {
@@ -107,7 +103,6 @@ namespace EricCore.Utilitys {
 
         public void to_file(string fineName, u8[] buf) {
             must_have_file(fineName);
-            //開啟建立檔案
             using (FileStream file = File.Open(fineName, FileMode.Open, FileAccess.ReadWrite)) {
                 using (BinaryWriter writeFile = new BinaryWriter(file)) {
                     writeFile.Write(buf);

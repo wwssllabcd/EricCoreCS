@@ -37,7 +37,7 @@ namespace EricCore.UsbCmder {
         }
 
         string gen_2nd_msg(CdbCmd cmd, u8[] buffer) {
-            return m_u.makeAsciiTable(buffer, cmd.length);
+            return m_u.make_ascii_table(buffer, cmd.length);
         }
 
         public void refresh() {
@@ -50,7 +50,7 @@ namespace EricCore.UsbCmder {
 
             u8[] buf = new byte[128 * 1024];
             device.send_cmd(cmd, ref buf);
-            m_view.send_msg(m_u.makeHexTable(buf, cmd.length));
+            m_view.send_msg(m_u.make_hex_table(buf, cmd.length));
             m_view.send_2nd_msg(gen_2nd_msg(cmd, buf));
         }
 
