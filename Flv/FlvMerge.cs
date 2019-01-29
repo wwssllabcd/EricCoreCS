@@ -12,8 +12,8 @@ namespace EricCore
     }
     public class FlvMerge
     {
-        const uint FLV_TAG_HEADER_SIZE = 15;
-        const uint FLV_HEADER_SIZE = 9;
+        const u32 FLV_TAG_HEADER_SIZE = 15;
+        const u32 FLV_HEADER_SIZE = 9;
 
         FileStream m_flvFs;
         FLVContext m_flvInfo;

@@ -13,8 +13,11 @@ namespace EricCore.UsbCmder {
         Utility m_u = new Utility();
         WpfUtility m_du = new WpfUtility();
         public delegate void ExtraPageCtrol(CdbCmd cmd, bool isPageDown);
-        public ExtraPageCtrol epcFun = null;
+        public ExtraPageCtrol extPageCtrl = null;
         public u8[] m_buffer;
+
+        public delegate string Msg2nd(CdbCmd cmd, u8[] buffer);
+        public Msg2nd msg2nd;
 
         public List<CdbCmd> get_extra_cmd_set(List<CdbCmd> cmdColls) {
             string extraCmdFilePath = "ExtraCmd.xml";
@@ -30,13 +33,14 @@ namespace EricCore.UsbCmder {
             CmdSetUfi cmdset = new CmdSetUfi();
             List<CdbCmd> cmdColls = cmdset.get_cmd_colls(get_extra_cmd_set(new List<CdbCmd>()));
             m_view.bind_cmd_sel(cmdColls);
+            msg2nd = default_2nd_msg;
         }
 
         public void cmd_select_changed() {
             m_view.cmd_select_changed();
         }
 
-        string gen_2nd_msg(CdbCmd cmd, u8[] buffer) {
+        string default_2nd_msg(CdbCmd cmd, u8[] buffer) {
             return m_u.make_ascii_table(buffer, cmd.length);
         }
 
@@ -51,7 +55,7 @@ namespace EricCore.UsbCmder {
             u8[] buf = new byte[128 * 1024];
             device.send_cmd(cmd, ref buf);
             m_view.send_msg(m_u.make_hex_table(buf, cmd.length));
-            m_view.send_2nd_msg(gen_2nd_msg(cmd, buf));
+            m_view.send_2nd_msg(msg2nd(cmd, buf));
         }
 
         public bool load_file() {
@@ -85,7 +89,7 @@ namespace EricCore.UsbCmder {
                 m_u.set_value_to_array_be(lba, cmd.cdb, 2);
             }
 
-            epcFun?.Invoke(cmd, isPageDown);
+            extPageCtrl?.Invoke(cmd, isPageDown);
 
             return cmd;
         }

@@ -34,10 +34,10 @@ namespace EricCore.Utilitys {
             return strB.ToString();
         }
 
-        public string makeHexTable_NoHeader(u8[] array, uint length) {
+        public string makeHexTable_NoHeader(u8[] array, u32 offset, u32 length) {
             StringBuilder strB = new StringBuilder();
-            for (uint i = 0; i < length; i++) {
-                strB.Append(array[i].ToString("X2"));
+            for (u32 i = 0; i < length; i++) {
+                strB.Append(array[i + offset].ToString("X2"));
                 strB.Append(" ");
                 if (((i + 1) % 0x10) == 0) {
                     strB.Append(crlf());
@@ -47,20 +47,20 @@ namespace EricCore.Utilitys {
         }
 
         public string makeHexTable_NoHeader(u8[] array) {
-            return makeHexTable_NoHeader(array, (uint)array.Length);
+            return makeHexTable_NoHeader(array, 0, (u32)array.Length);
+        }
+
+        public string make_hex_table(u8[] array, u32 length) {
+            return makeHeader(makeHexTable_NoHeader(array, 0, length));
         }
 
         public string make_hex_table(u8[] array) {
-            return make_hex_table(array, (uint)array.Length);
+            return make_hex_table(array, (u32)array.Length);
         }
 
-        public string make_hex_table(u8[] array, uint length) {
-            return makeHeader(makeHexTable_NoHeader(array, length));
-        }
-
-        public string make_ascii_table(u8[] array, uint length) {
+        public string make_ascii_table(u8[] array, u32 length) {
             StringBuilder strB = new StringBuilder();
-            for (uint i = 0; i < length; i++) {
+            for (u32 i = 0; i < length; i++) {
                 //skip "0"
                 if (array[i] == 0) {
                     strB.Append(".");
@@ -78,7 +78,7 @@ namespace EricCore.Utilitys {
         }
 
         public string make_ascii_table(u8[] array) {
-            return make_ascii_table(array, (uint)array.Length);
+            return make_ascii_table(array, (u32)array.Length);
         }
 
         public u8[] getFileData(string path) {
@@ -232,8 +232,8 @@ namespace EricCore.Utilitys {
             return val.ToString("X2");
         }
 
-        public string toHexString(u16 val) {
-            return val.ToString("X4");
+        public string toHexString(u16 val, string param = "X4") {
+            return val.ToString(param);
         }
 
         public string toHexString(u32 val) {
