@@ -12,15 +12,15 @@ namespace EricCore.Scsi {
         public u32 length;
         public string desc;
         public u8 direction;
-
-        public const u8 DATA_OUT = 0;
-        public const u8 DATA_IN = 1;
-        public const u8 DATA_NON = 2;
-
-        public CdbCmd() { }
         public override string ToString() {
             return desc;
         }
+    }
+
+    public static class ScsiConst {
+        public const u8 DATA_OUT = 0;
+        public const u8 DATA_IN = 1;
+        public const u8 DATA_NON = 2;
     }
 
     public class CmdSetUfi {
@@ -40,7 +40,8 @@ namespace EricCore.Scsi {
             cmd.cdb[0] = 0x12;
             cmd.cdb[4] = 0x24;
             cmd.length = 0x24;
-            cmd.direction = CdbCmd.DATA_IN;
+            
+            cmd.direction = ScsiConst.DATA_IN;
             cmd.desc = "UFI: Inquiry";
             return cmd;
         }
@@ -50,7 +51,7 @@ namespace EricCore.Scsi {
             cmd.cdb[0] = 0x3;
             cmd.cdb[4] = 0x12;
             cmd.length = 0x12;
-            cmd.direction = CdbCmd.DATA_IN;
+            cmd.direction = ScsiConst.DATA_IN;
             cmd.desc = "UFI: Request Sense";
             return cmd;
         }
@@ -59,7 +60,7 @@ namespace EricCore.Scsi {
             CdbCmd cmd = new CdbCmd();
             cmd.cdb[0] = 0x25;
             cmd.length = 8;
-            cmd.direction = CdbCmd.DATA_IN;
+            cmd.direction = ScsiConst.DATA_IN;
             cmd.desc = "UFI: Read Capacity";
             return cmd;
         }
@@ -68,14 +69,14 @@ namespace EricCore.Scsi {
             CdbCmd cmd = new CdbCmd();
             cmd.cdb[0] = 0x23;
             cmd.length = 12;
-            cmd.direction = CdbCmd.DATA_IN;
+            cmd.direction = ScsiConst.DATA_IN;
             cmd.desc = "UFI: Read Format Capacity";
             return cmd;
         }
 
         public CdbCmd testUnitReady() {
             CdbCmd cmd = new CdbCmd();
-            cmd.direction = CdbCmd.DATA_OUT;
+            cmd.direction = ScsiConst.DATA_OUT;
             cmd.desc = "UFI: Test Unit Ready";
             return cmd;
         }
@@ -85,7 +86,7 @@ namespace EricCore.Scsi {
             cmd.cdb[0] = 0x28;
             cmd.cdb[8] = 0x01;
             cmd.length = 512;
-            cmd.direction = CdbCmd.DATA_IN;
+            cmd.direction = ScsiConst.DATA_IN;
             cmd.desc = "UFI: Read(10)";
             return cmd;
         }
@@ -95,7 +96,7 @@ namespace EricCore.Scsi {
             cmd.cdb[0] = 0x2A;
             cmd.cdb[8] = 0x01;
             cmd.length = 512;
-            cmd.direction = CdbCmd.DATA_OUT;
+            cmd.direction = ScsiConst.DATA_OUT;
             cmd.desc = "UFI: Write(10)";
             return cmd;
         }

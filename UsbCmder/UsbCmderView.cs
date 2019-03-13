@@ -52,7 +52,7 @@ namespace EricCore.UsbCmder {
                 m_txtCdb[i].Text = m_u.toHexString(cmd.cdb[i]);
             }
 
-            if (cmd.direction == CdbCmd.DATA_IN) {
+            if (cmd.direction == ScsiConst.DATA_IN) {
                 m_DataIn.IsChecked = true;
                 m_DataOut.IsChecked = false;
             } else {
@@ -74,9 +74,9 @@ namespace EricCore.UsbCmder {
             cmd.length = m_u.to_u32(m_txtLength.Text);
 
             if (m_DataIn.IsChecked == true) {
-                cmd.direction = CdbCmd.DATA_IN;
+                cmd.direction = ScsiConst.DATA_IN;
             } else {
-                cmd.direction = CdbCmd.DATA_OUT;
+                cmd.direction = ScsiConst.DATA_OUT;
             }
             return cmd;
         }
